@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#3979df">
+<title>Pequeños Exploradores by MiniAcad</title>
+<style>
+:root{--bg:#f4f7fc;--paper:#fff;--ink:#20304a;--muted:#5d6b82;--blue:#3979df;--purple:#7957d5;--pink:#ef6e9b;--green:#20a981;--line:#dce5f1;--font:16px}
+*{box-sizing:border-box}
+html{font-size:var(--font);scroll-behavior:smooth;scroll-padding-top:110px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+button,input,select{font:inherit}button,a{cursor:pointer}a{text-decoration:none;color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ffad35;outline-offset:3px}
+.wrap{width:min(1250px,calc(100% - 32px));margin:auto}
+.top{background:linear-gradient(90deg,var(--purple),var(--blue));color:white;text-align:center;padding:9px;font-weight:bold}
+header{position:sticky;top:0;z-index:10;background:#ffffffed;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:bold}
+.logo{background:#ffd36b;border-radius:15px;padding:9px;font-size:1.7rem}
+.brand small{display:block;color:var(--muted);font-weight:normal;font-size:.75rem}
+.navlinks,.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.navlinks a{padding:8px;border-radius:9px;font-weight:bold;color:#53637b}
+.navlinks a:hover{background:#edf3ff}
+.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:bold;display:inline-flex;justify-content:center;align-items:center;gap:6px}
+.primary{background:var(--blue);color:white}.primary:hover{background:#245bb7}
+.secondary{background:white;border:1px solid var(--line);color:var(--ink)}
+.purple{background:var(--purple);color:white}
+.hero{background:radial-gradient(circle at 85% 20%,#d4f4e9,transparent 25%),linear-gradient(120deg,#eef6ff,#f2eaff 65%,#fff6df);padding:45px 0}
+.heroGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
+.pill{display:inline-block;background:white;border-radius:30px;padding:7px 12px;color:#5e5aab;font-weight:bold;font-size:.85rem}
+h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.08;margin:17px 0;letter-spacing:-1.5px}
+.gradient{background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:1.08rem;max-width:620px}
+.heroButtons{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.heroArt{min-height:280px;display:grid;place-items:center;position:relative}
+.mascot{background:white;border:6px solid white;border-radius:45px;font-size:7rem;padding:20px;box-shadow:0 15px 40px #5267a32b}
+.float{position:absolute;background:white;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 24px #20304a18;font-weight:bold}
+.f1{top:10px;left:0}.f2{right:0;top:35%}.f3{bottom:8px;left:8%}
+.features{display:flex;flex-wrap:wrap;gap:14px;color:var(--muted);font-weight:bold;font-size:.88rem;margin-top:20px}
+section{padding:36px 0}
+.heading{display:flex;justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap;margin-bottom:20px}
+.kicker{color:var(--blue);font-size:.8rem;font-weight:bold;text-transform:uppercase;letter-spacing:1px}
+h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:5px 0}
+.muted{color:var(--muted)}
+.searchrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.searchrow input{flex:1;min-width:190px;padding:12px;border:1px solid var(--line);border-radius:11px}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter{border:1px solid var(--line);background:white;border-radius:30px;padding:9px 12px;font-weight:bold;color:#586981}
+.filter[aria-pressed=true]{background:var(--purple);color:white}
+.courses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.card{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 24px #20304a0c;display:flex;flex-direction:column;min-width:0}
+.banner{padding:16px;display:flex;align-items:center;justify-content:space-between;min-height:100px}
+.emoji{font-size:2.8rem;background:#ffffffb8;border-radius:18px;padding:7px}
+.tag{background:#ffffffd9;border-radius:20px;padding:5px 8px;font-size:.72rem;font-weight:bold}
+.cardbody{padding:16px;display:flex;flex-direction:column;flex:1}
+.card h3{margin:0 0 8px;font-size:1.08rem;line-height:1.3}
+.card p{color:var(--muted);font-size:.9rem;flex:1}
+.meta{font-size:.8rem;color:var(--muted);margin:6px 0 12px}
+.track{height:7px;background:#edf1f7;border-radius:20px;overflow:hidden;margin-bottom:13px}
+.track span{display:block;height:100%;width:0;background:var(--green)}
+.cardbuttons{display:flex;gap:8px}.cardbuttons button{flex:1;font-size:.85rem;padding:10px 7px}
+.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 24px #20304a0c;min-width:0}
+.welcome{background:linear-gradient(130deg,#f0eaff,#eaf4ff)}
+.overall{height:11px;background:white;border-radius:20px;overflow:hidden;margin:10px 0}
+.overall span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--blue))}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:15px}
+.badge{border:1px solid var(--line);background:white;border-radius:12px;text-align:center;padding:10px 4px;font-size:.75rem;font-weight:bold;overflow-wrap:anywhere}
+.badge span{display:block;font-size:1.7rem}.locked{filter:grayscale(1);opacity:.55}
+.answers{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.answer{background:white;border:2px solid var(--line);border-radius:10px;padding:10px 13px;font-weight:bold}
+.answer:hover{border-color:var(--blue)}
+.feedback{min-height:25px;font-weight:bold}
+.accessGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.accessCard{background:white;border:1px solid var(--line);border-radius:15px;padding:15px}
+.accessCard p{font-size:.88rem;color:var(--muted)}
+.tools{display:flex;gap:7px;flex-wrap:wrap}
+.notice{background:#eaf5ff;border-left:4px solid var(--blue);padding:14px;border-radius:7px;font-size:.9rem}
+footer{background:#202c43;color:white;padding:25px 0;margin-top:20px}
+footer p{color:#c5d1e2;font-size:.87rem}
+dialog{border:0;border-radius:19px;width:min(620px,calc(100% - 22px));max-height:90vh;overflow:auto;padding:0;color:var(--ink);box-shadow:0 20px 70px #15223c55}
+dialog::backdrop{background:#14213bb3}
+.modalhead{background:linear-gradient(100deg,#edf5ff,#f3eaff);padding:18px 21px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.modalbody{padding:20px}
+.field{margin:12px 0}.field label{display:block;font-weight:bold;margin-bottom:5px}
+.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px}
+.module{list-style:none;padding:0;margin:15px 0}
+.module li{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 4px 12px #20304a08}
+.step-header{display:flex;justify-content:space-between;align-items:center;font-weight:bold;margin-bottom:6px;font-size:1rem;color:var(--blue)}
+.step-gfx{display:flex;align-items:center;justify-content:center;background:#f0eaff;border-radius:12px;padding:12px;font-size:2.2rem;margin:8px 0;gap:10px}
+.step-desc{color:var(--ink);font-size:.92rem;line-height:1.4}
+.lesson{background:#f2f6ff;border:1px solid #dce7fa;border-radius:12px;padding:14px;margin:15px 0}
+.hidden{display:none!important}
+.high{--bg:#fff;--ink:#000;--muted:#222;--blue:#003bb3;--purple:#4b0082;--line:#555}
+.soft{--bg:#f6f3ed;--paper:#fffdf8;--ink:#38352f;--muted:#655f55;--blue:#6d7f9f;--purple:#8b7aa8;--line:#e4ddd0}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;z-index:100;background:white;padding:10px}
+@media(min-width:1400px){.courses{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1000px){.courses{grid-template-columns:repeat(2,minmax(0,1fr))}.accessGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.heroGrid{gap:15px}}
+@media(max-width:700px){.wrap{width:calc(100% - 22px)}nav{justify-content:center}.brand{margin-right:auto}.navlinks{order:3;width:100%;justify-content:center}.heroGrid{grid-template-columns:1fr}.heroArt{min-height:230px;order:-1}.mascot{font-size:5rem;padding:15px}.hero{padding:28px 0}.dashboard{grid-template-columns:1fr}.heading{align-items:start}.courses{gap:10px}.cardbody{padding:12px}.banner{padding:10px;min-height:82px}.emoji{font-size:2rem}.card h3{font-size:1rem}.card p{font-size:.82rem}.cardbuttons{flex-direction:column}.badges{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:420px){.courses{grid-template-columns:1fr}.cardbuttons{flex-direction:row}.accessGrid{grid-template-columns:1fr}.actions .btn{padding:9px;font-size:.8rem}.navlinks a{font-size:.8rem;padding:6px}.features{gap:8px}.badges{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<div class="top" aria-live="polite">🌱 ¡Cada pregunta puede convertirse en una gran aventura!</div>
+<header><div class="wrap"><nav aria-label="Navegación principal">
+<a class="brand" href="#inicio"><span class="logo" aria-hidden="true">🧭</span><span>Pequeños Exploradores<small>by MiniAcad · aprender es una aventura</small></span></a>
+<div class="navlinks"><a href="#cursos">Cursos</a><a href="#aventura">Mi perfil</a><a href="#jugar">Jugar</a><a href="#accesibilidad">Accesibilidad</a></div>
+<div class="actions"><button class="btn secondary" id="speakPage" aria-label="Escuchar descripción de la página">🔊</button><button class="btn secondary" id="profileBtn">👤 Perfil</button><button class="btn primary" id="registerBtn">Registrarse</button></div>
+</nav></div></header>
+<main id="contenido">
+<section class="hero" id="inicio"><div class="wrap heroGrid">
+<div><span class="pill">✨ Un mundo de descubrimientos</span><h1>Tu curiosidad es tu <span class="gradient">superpoder.</span></h1>
+<p>Explora ciencias, matemáticas, creatividad y habilidades para la vida. Aprende a tu ritmo con retos, lecciones y actividades para mentes curiosas.</p>
+<div class="heroButtons"><a class="btn primary" href="#cursos">🚀 Ver cursos disponibles</a><a class="btn secondary" href="#jugar">🧩 Probar una actividad</a></div>
+<div class="features"><span>🧩 Aprendizaje activo</span><span>♿ Accesibilidad</span><span>🛡️ Cuidado infantil</span></div>
+</div>
+<div class="heroArt" aria-label="Ilustraciones educativas"><div class="mascot" role="img" aria-label="Carita de explorador">🧒</div><div class="float f1">🧪 Ciencia</div><div class="float f2">🚀 ¡Imagina!</div><div class="float f3">🌈 Aprende jugando</div></div>
+</div></section>
+
+<section id="cursos"><div class="wrap">
+<div class="heading"><div><span class="kicker">Elige tu aventura</span><h2>Explora nuestros cursos</h2><p class="muted">Abre un curso para ver sus módulos explicativos y completar su reto.</p></div><span class="pill" id="courseCount">15 cursos</span></div>
+<div class="searchrow"><input id="search" type="search" placeholder="🔎 Buscar cursos..." aria-label="Buscar cursos">
+<div class="filters" aria-label="Filtrar cursos"><button class="filter" data-filter="Todos" aria-pressed="true">Todos</button><button class="filter" data-filter="Ciencia" aria-pressed="false">🔬 Ciencia</button><button class="filter" data-filter="Matemáticas" aria-pressed="false">🔢 Matemáticas</button><button class="filter" data-filter="Creatividad" aria-pressed="false">🎨 Arte</button><button class="filter" data-filter="Vida diaria" aria-pressed="false">🌱 Vida diaria</button><button class="filter" data-filter="Tecnología" aria-pressed="false">💻 Tecnología</button></div></div>
+<div class="courses" id="courses" aria-live="polite"></div>
+</div></section>
+
+<section id="aventura"><div class="wrap"><div class="heading"><div><span class="kicker">Tu espacio</span><h2>Mi aventura e insignias</h2><p class="muted">El progreso de demostración se guarda en este navegador.</p></div></div>
+<div class="dashboard"><div class="panel welcome"><h3>¡Hola, <span id="nick">Explorador/a</span>! 👋</h3><p class="muted" id="hint">Puedes registrar un apodo con ayuda de un adulto.</p><strong id="progressText">0 de 15 cursos completados</strong><div class="overall"><span id="progressBar"></span></div><p id="progressMessage" class="muted">Cada reto es un paso de tu aventura.</p><div class="badges" id="badges"></div></div>
+<div class="panel" id="jugar"><span class="pill">🎯 Reto rápido</span><h3>¿Qué color aparece al mezclar azul y amarillo?</h3><div class="answers"><button class="answer" data-quick="verde">🟢 Verde</button><button class="answer" data-quick="morado">🟣 Morado</button><button class="answer" data-quick="naranja">🟠 Naranja</button></div><p id="quickFeedback" class="feedback" role="status" aria-live="polite"></p><button class="btn secondary" id="speakQuiz">🔊 Escuchar pregunta</button></div></div>
+</div></section>
+
+<section id="accesibilidad"><div class="wrap"><div class="heading"><div><span class="kicker">Todos podemos aprender</span><h2>Herramientas de accesibilidad</h2><p class="muted">Activa las opciones que te ayuden.</p></div></div>
+<div class="accessGrid">
+<div class="accessCard"><strong>🔊 Lectura por voz humana</strong><p>Escucha el texto con voces fluidas y naturales.</p><div class="tools"><button class="btn secondary" id="welcomeVoice">Escuchar bienvenida</button><button class="btn secondary" id="stopVoice">Detener</button></div></div>
+<div class="accessCard"><strong>🔎 Tamaño de letra</strong><p>Aumenta el texto para leer con comodidad.</p><div class="tools"><button class="btn secondary" id="smaller">A−</button><button class="btn secondary" id="bigger">A+</button><button class="btn secondary" id="normal">Normal</button></div></div>
+<div class="accessCard"><strong>◐ Alto contraste</strong><p>Usa colores más contrastantes.</p><button class="btn secondary" id="contrast" aria-pressed="false">Activar contraste</button></div>
+<div class="accessCard"><strong>🌙 Colores suaves</strong><p>Reduce la intensidad visual de la interfaz.</p><button class="btn secondary" id="soft" aria-pressed="false">Modo suave</button></div>
+</div><p class="notice">La lectura por voz utiliza voces naturales del navegador con entonación fluida. Lee cada paso explicativo e ilustración gráfica.</p></div></section>
+<section id="familias"><div class="wrap panel"><span class="kicker">Para las familias</span><h2>Privacidad y cuidado</h2><p class="muted">Esta versión es una demostración: no crea cuentas reales ni envía datos a Internet. Antes de publicar el registro infantil, se necesita un servidor seguro, HTTPS, autorización verificable del responsable, reglas de acceso y política de privacidad infantil.</p><button class="btn primary" id="privacyBtn">Leer aviso de privacidad</button></div></section>
+</main>
+<footer><div class="wrap"><strong>🧭 Pequeños Exploradores by MiniAcad</strong><p>Aprender es una aventura para todas las mentes curiosas. · Accesibilidad · Respeto · Privacidad</p></div></footer>
+
+<dialog id="courseDialog"><div class="modalhead"><div><span class="kicker" id="courseCat">Aventura</span><h2 id="courseTitle">Curso</h2></div><button class="btn secondary" id="closeCourseX" aria-label="Cerrar curso">✕</button></div><div class="modalbody"><p id="courseDesc" class="muted"></p><div class="lesson"><strong>Resumen de la lección</strong><p id="lessonText"></p><button class="btn secondary" id="speakLesson">🔊 Escuchar todo el curso</button></div><h3>Paso a paso con explicaciones y dibujos</h3><ul id="modules" class="module"></ul><div class="lesson"><strong>Reto del curso</strong><p id="question"></p><div id="courseAnswers" class="answers"></div><p id="activityFeedback" class="feedback" role="status" aria-live="polite"></p></div><button class="btn primary" id="complete">Completar curso y ganar insignia 🏆</button> <button class="btn secondary" id="closeCourse">Cerrar</button><p id="courseStatus" class="feedback" role="status" aria-live="polite"></p></div></dialog>
+
+<dialog id="profileDialog"><div class="modalhead"><h2>👤 Perfil de explorador</h2><button class="btn secondary" id="closeProfileX">✕</button></div><div class="modalbody"><p class="muted">Solo para probar el diseño. No uses tu nombre completo, dirección, colegio, teléfono ni contraseñas.</p><form id="profileForm"><div class="field"><label for="nickname">Apodo</label><input id="nickname" maxlength="20" minlength="2" placeholder="Ej. EstrellaCuriosa" required></div><label><input type="checkbox" id="adult" required> Un adulto responsable me acompaña y autoriza esta demostración.</label><p class="muted">El apodo se guarda en este navegador, no en una cuenta segura.</p><button class="btn primary" type="submit">Guardar apodo</button> <button class="btn secondary" type="button" id="closeProfile">Cancelar</button><p id="profileStatus" role="status"></p></form></div></dialog>
+
+<dialog id="privacyDialog"><div class="modalhead"><h2>Aviso de privacidad</h2><button class="btn secondary" id="closePrivacyX">✕</button></div><div class="modalbody"><p>Esta página es una demostración educativa. El apodo y los cursos completados se guardan en el almacenamiento local de este navegador. Otras personas que usen este equipo podrían verlos.</p><p>No hay cuentas seguras ni verificación real de autorización familiar. No escribas datos personales reales. Antes de publicar el sitio se debe implementar un sistema de cuentas seguro y una política de privacidad infantil.</p><button class="btn primary" id="closePrivacy">Entendido</button></div></dialog>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const data=[
+["colores","Laboratorio de colores","Ciencia","🌈","#d9f4eb","Descubre colores y mezclas sorprendentes.","10 min",[
+  {title:"Colores primarios",gfx:"🔴 + 🟡 + 🔵",desc:"Paso 1: Los colores primarios son el Rojo, el Amarillo y el Azul. Son colores puros que no se pueden crear mezclando otros."},
+  {title:"Mezclas sorprendentes",gfx:"🔵 + 🟡 = 🟢",desc:"Paso 2: ¡Súper magia! Cuando mezclas Azul con Amarillo, creas el Verde. Si mezclas Rojo con Amarillo, ¡obtienes Naranja!"},
+  {title:"Reto del arcoíris",gfx:"🌈 🎨 🖌️",desc:"Paso 3: Experimenta combinando tus colores para formar todos los tonos del arcoíris."}
+],"Al mezclar azul y amarillo puedes obtener verde.","¿Qué color aparece al mezclar azul y amarillo?",["Verde","Morado","Naranja"],0,"Maestro del color"],
+
+["numeros","Números en acción","Matemáticas","🔢","#fff0c4","Cuenta, compara y resuelve desafíos numéricos.","12 min",[
+  {title:"Cuenta del 1 al 10",gfx:"1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣",desc:"Paso 1: Contar es decir los números en orden y señalar los objetos uno a uno. ¡Practica contando los dedos de tu mano!"},
+  {title:"Más, menos e igual",gfx:"🍎🍎  >  🍎",desc:"Paso 2: Compara grupos de frutas o juguetes. Dos objetos representan una cantidad mayor que un solo objeto."},
+  {title:"Reto de cantidades",gfx:"🧩 ➕ ➖",desc:"Paso 3: Sumar es juntar dos colecciones. Si juntas dos cubos con tres cubos, obtienes cinco cubos en total."}
+],"Contar es decir los números en orden y relacionarlos con objetos.","¿Cuánto es 2 + 3?",["4","5","6"],1,"Detective numérico"],
+
+["artistas","Artistas espaciales","Creatividad","🎨","#ffe5d5","Crea personajes, combina formas e imagina mundos.","12 min",[
+  {title:"Formas que nos rodean",gfx:"🔴 🔺 ⬛",desc:"Paso 1: Todas las cosas están compuestas de formas básicas. La rueda es un círculo, la ventana un cuadrado y la rebanada de pizza un triángulo."},
+  {title:"Dibuja un planeta",gfx:"🪐 🎨 ✨",desc:"Paso 2: Dibuja un círculo grande y traza líneas curvas alrededor para crear los anillos de un planeta gigante."},
+  {title:"Crea tu obra",gfx:"🖼️ 🖌️ 🧑‍🎨",desc:"Paso 3: Junta triángulos, cuadrados y círculos para construir cohetes, casas y personajes espaciales."}
+],"Un círculo, un triángulo y un rectángulo pueden convertirse en dibujos.","¿Qué forma tiene una pelota redonda?",["Círculo","Triángulo","Cuadrado"],0,"Artista galáctico"],
+
+["espacio","Misión por el espacio","Ciencia","🚀","#e4e3ff","Explora planetas, estrellas y el universo.","15 min",[
+  {title:"El Sol y las estrellas",gfx:"☀️ ⭐️ 🌟",desc:"Paso 1: El Sol es una enorme estrella de fuego que brilla en el centro de nuestro sistema y nos brinda calor."},
+  {title:"Conoce los planetas",gfx:"🌍 🪐 🔴",desc:"Paso 2: La Tierra es el planeta donde vivimos. Gira alrededor del Sol junto a planetas como Marte y Júpiter."},
+  {title:"Diseña una misión",gfx:"👨‍🚀 🚀 🌌",desc:"Paso 3: Ponte el traje de astronauta e imagina viajar en un cohete para visitar la Luna y juntar estrellas."}
+],"La Tierra es un planeta que gira alrededor del Sol.","¿En qué planeta vivimos?",["Marte","Tierra","Júpiter"],1,"Explorador espacial"],
+
+["naturaleza","Guardianes de la naturaleza","Ciencia","🌿","#dff5d9","Aprende a cuidar plantas, animales y el planeta.","12 min",[
+  {title:"Seres vivos",gfx:"🌱 🐶 🌻",desc:"Paso 1: Las plantas y animales respiran, comen y crecen. Necesitan agua limpia, sol y tierra sana para vivir."},
+  {title:"Hábitats naturales",gfx:"🌲 🌊 🏜️",desc:"Paso 2: Los bosques y océanos son los hogares de las especies silvestres. Mantener los ríos limpios protege a los peces."},
+  {title:"Acciones que ayudan",gfx:"🚮 🚰 ♻️",desc:"Paso 3: Cierra la llave del agua mientras te lavamos las manos y tira las envolturas siempre en el bote de basura."}
+],"Ahorrar agua y evitar la basura ayuda a cuidar la naturaleza.","¿Cuál acción ayuda al planeta?",["Tirar basura al río","Ahorrar agua","Arrancar flores"],1,"Guardián verde"],
+
+["cuerpo","El cuerpo humano","Ciencia","🫀","#ffe0e8","Descubre los sentidos y cómo trabaja tu cuerpo.","14 min",[
+  {title:"Los cinco sentidos",gfx:"👀 👂 👃 👅 ✋",desc:"Paso 1: Tus ojos ven los colores, tus oídos escuchan sonidos, tu nariz huele flores, tu lengua saborea y tus manos sienten texturas."},
+  {title:"Huesos y músculos",gfx:"🦴 🏃‍♂️ 💪",desc:"Paso 2: Los huesos forman la estructura de tu cuerpo y los músculos se estiran para permitirte saltar y bailar."},
+  {title:"Hábitos saludables",gfx:"🥗 💤 🧼",desc:"Paso 3: Lavarte las manos antes de comer, comer alimentos nutritivos y dormir bien fortalece tus defensas."}
+],"Los sentidos ayudan a conocer el entorno de distintas maneras.","¿Qué sentido usamos para escuchar?",["Oído","Gusto","Olfato"],0,"Experto del cuerpo"],
+
+["animales","Mundo animal","Ciencia","🦋","#e0f4ff","Conoce animales, hogares y habilidades increíbles.","12 min",[
+  {title:"Terrestres y acuáticos",gfx:"🦁 🐬 🦅",desc:"Paso 1: Los animales terrestres caminan en la tierra, los marinos nadan en mares y las aves vuelan por el cielo."},
+  {title:"Dónde viven",gfx:"🌳 🪸 ❄️",desc:"Paso 2: Cada animal tiene un refugio especial: las aves hacen nidos en árboles y los osos polares viven en el hielo."},
+  {title:"Cómo protegerlos",gfx:"🛡️ 🐾 🌿",desc:"Paso 3: Respeta a los insectos y animales pequeños en los parques. Déjalos libres en su entorno natural."}
+],"Los animales viven en hábitats como bosques, océanos y desiertos.","¿Cuál de estos animales vive en el agua?",["Delfín","León","Camello"],0,"Amigo animal"],
+
+["lectura","Club de cuentos","Creatividad","📚","#f3e4ff","Juega con palabras e inventa historias.","10 min",[
+  {title:"Personajes y lugares",gfx:"🧙‍♂️ 🏰 🌲",desc:"Paso 1: Un cuento comienza imaginando un héroe o heroína y un lugar mágico, como un castillo o un bosque encantado."},
+  {title:"Ordena una historia",gfx:"1️⃣ Inicio ➔ 2️⃣ Reto ➔ 3️⃣ Final",desc:"Paso 2: Al inicio se presentan los personajes, en el centro ocurre una aventura y al final se llega a una solución."},
+  {title:"Inventa un final",gfx:"✍️ 💡 🎭",desc:"Paso 3: Cambia el rumbo del cuento creando finales divertidos donde todos los personajes se hagan amigos."}
+],"Los cuentos pueden tener personajes, un lugar, un problema y una solución.","¿Qué suele tener un cuento?",["Personajes","Solo números","Solo señales"],0,"Cuenta historias"],
+
+["musica","Ritmos y sonidos","Creatividad","🎵","#ffe7f0","Explora sonidos, ritmos y patrones musicales.","10 min",[
+  {title:"Sonidos fuertes y suaves",gfx:"📢 🔕 🐥",desc:"Paso 1: El trueno hace un sonido fuerte y grave. La gota de agua produce un sonido suave y agudo."},
+  {title:"Patrones rítmicos",gfx:"👏 🦶 👏 🦶",desc:"Paso 2: Sigue la música dando una palmada y luego un golpe suave en el suelo con el pie en secuencia."},
+  {title:"Crea tu ritmo",gfx:"🥁 🎸 🔔",desc:"Paso 3: Usa tambores o tus manos para crear combinaciones divertidas de sonidos rítmicos."}
+],"La música puede organizarse en patrones de sonidos y pausas.","En un patrón repetido, ¿qué puede venir después de dos palmas?",["Otra secuencia de palmas","Un color","Un número siempre"],0,"Músico curioso"],
+
+["emociones","Emociones y amistad","Vida diaria","💛","#fff0c9","Reconoce emociones y practica la empatía.","10 min",[
+  {title:"Nombra tus emociones",gfx:"😊 😢 😡 😨",desc:"Paso 1: Cuando estés feliz sonríes, si estás triste o enojado es normal. Identificar qué sientes te ayuda a expresar tus ideas."},
+  {title:"Escucha con respeto",gfx:"🗣️ 👂 🤝",desc:"Paso 2: Escuchar atentos cuando alguien nos habla es una muestra de cariño y respeto hacia los demás."},
+  {title:"Resuelve desacuerdos",gfx:"🕊️ 💬 ❤️",desc:"Paso 3: Si quieres el mismo juguete que un amigo, respiren profundo, hablen amablemente y compartan turnos."}
+],"Hablar con una persona adulta de confianza puede ayudar cuando algo preocupa.","Si alguien habla, ¿qué puedes hacer?",["Escuchar con respeto","Interrumpir siempre","Burlarte"],0,"Amigo respetuoso"],
+
+["seguridad","Pequeños hábitos seguros","Vida diaria","🛡️","#e1edff","Aprende hábitos para cuidarte y pedir ayuda.","11 min",[
+  {title:"Adultos de confianza",gfx:"👨‍👩‍👧 🧑‍🏫 👮",desc:"Paso 1: Tus adultos de confianza son personas que te aman y cuidan. Acude a ellos siempre que tengas dudas o miedo."},
+  {title:"Cruzar con atención",gfx:"🚦 🛑 🚶‍♂️",desc:"Paso 2: Detente en la acera, mira a la izquierda y derecha, y cruza el paso peatonal tomado de la mano de un adulto."},
+  {title:"Privacidad en línea",gfx:"🔒 💻 🛑",desc:"Paso 3: No compartas nombres ni fotos en dispositivos. Si ves algo extraño en pantalla, avisa de inmediato."}
+],"Si algo en Internet te incomoda, cuéntaselo a una persona adulta de confianza.","¿Qué haces si alguien desconocido pide datos privados?",["Compartirlos","Pedir ayuda a un adulto","Publicarlos"],1,"Explorador cuidadoso"],
+
+["cocina","Cocina de colores","Vida diaria","🍎","#ffe1d9","Aprende hábitos de higiene y cocina segura con un adulto.","10 min",[
+  {title:"Colores de alimentos",gfx:"🥦 🍌 🍓 🥕",desc:"Paso 1: Un plato saludable tiene muchos colores: las verduras verdes te dan fuerza y las frutas rojas vitaminas."},
+  {title:"Higiene de manos",gfx:"🧼 🚰 🫧",desc:"Paso 2: Frota tus manos con jabón haciendo espuma durante 20 segundos antes de preparar o comer alimentos."},
+  {title:"Ayudante de cocina",gfx:"👨‍🍳 🥣 🥗",desc:"Paso 3: Puedes colaborar en la cocina lavando las hojas de lechuga o mezclando ensaladas frías junto a un adulto."}
+],"Lavarse las manos antes de cocinar ayuda a mantener la higiene.","¿Qué haces antes de preparar comida?",["Lavarte las manos","Jugar con utensilios","Olvidar la higiene"],0,"Ayudante de cocina"],
+
+["tecnologia","Primeros pasos digitales","Tecnología","💻","#d9efff","Descubre cómo usar la tecnología con cuidado.","13 min",[
+  {title:"Dispositivos y programas",gfx:"🖥️ 📱 ⌨️",desc:"Paso 1: La tecnología incluye pantallas y teclados que nos ayudan a investigar, comunicarnos y estudiar."},
+  {title:"Instrucciones paso a paso",gfx:"📝 ➔ 🤖",desc:"Paso 2: Un algoritmo es dar instrucciones precisas y ordenadas a una máquina para que realice una tarea correctamente."},
+  {title:"Cuidado digital",gfx:"⏳ 🛋️ ☀️",desc:"Paso 3: Combina el uso de pantallas con tiempo al aire libre, lectura de libros físicos y juegos en familia."}
+],"Un algoritmo es una serie de pasos para completar una tarea.","¿Qué es un algoritmo?",["Pasos ordenados","Un animal marino","Un color"],0,"Pionero digital"],
+
+["logica","Detectives de lógica","Matemáticas","🧩","#e4e4ff","Encuentra patrones y resuelve acertijos.","12 min",[
+  {title:"Encuentra el patrón",gfx:"🔴 🔵 🔴 🔵 ❓",desc:"Paso 1: Observa la secuencia. Si hay un círculo rojo y uno azul, la figura que continúa el patrón es otro círculo rojo."},
+  {title:"Agrupa objetos",gfx:"🧸 🚗 | 🍌 🍎",desc:"Paso 2: Separa las cosas en grupos que compartan características: juguetes por un lado y frutas por otro."},
+  {title:"Resuelve el misterio",gfx:"🔍 💡 🧠",desc:"Paso 3: Reúne las pistas visuales con paciencia para responder correctamente las preguntas misteriosas."}
+],"La lógica ayuda a comparar pistas y explicar respuestas.","¿Qué número sigue: 2, 4, 6...?",["7","8","10"],1,"Detective de pistas"],
+
+["formas","Formas y construcciones","Matemáticas","🔺","#dcf5f0","Reconoce figuras y construye formas imaginarias.","11 min",[
+  {title:"Lados y esquinas",gfx:"🔺 (3) | ⬛ (4)",desc:"Paso 1: Un triángulo se forma con tres líneas que se unen. Un cuadrado utiliza cuatro líneas rectas iguales."},
+  {title:"Formas reales",gfx:"🚪 🪙 📐",desc:"Paso 2: Las puertas de tu casa son rectángulos y los relojes de pared suelen ser círculos perfectos."},
+  {title:"Construye una figura",gfx:"🏰 🧱 📐",desc:"Paso 3: Dibuja y recorta figuras geométricas para construir castillos, trenes o cohetes espaciales."}
+],"Las formas aparecen en ventanas, ruedas, señales y cajas.","¿Cuántos lados tiene un triángulo?",["Tres","Cuatro","Cinco"],0,"Constructor de formas"],
+
+["cordones","Habilidades para la vida","Vida diaria","👟","#ffe7cb","Practica secuencias útiles y habilidades cotidianas.","12 min",[
+  {title:"Paso 1: Cruzar las cintas",gfx:"👟 ✂️ 🪢",desc:"Paso 1: Cruza los dos cordones formando una letra X. Pasa una de las cintas por debajo del puente y jala firme hacia los lados."},
+  {title:"Paso 2: Hacer las orejitas",gfx:"🐰 ➰ ➰",desc:"Paso 2: Forma una lazada doblada con cada cordón para que parezcan dos orejas de conejo suaves."},
+  {title:"Paso 3: El nudo final",gfx:"🎀 ✨ 👟",desc:"Paso 3: Cruza las dos orejitas de conejo entre sí, pasa una por el centro y jala fuerte ambas lazadas. ¡Lograste atar tu zapato!"}
+],"Atar cordones lleva práctica. Puedes comenzar con cordones grandes y pedir ayuda.","¿Qué ayuda a aprender una habilidad nueva?",["Practicar con calma","Rendirse enseguida","Apurarse siempre"],0,"Campeón de la práctica"]
+].map(x=>({id:x[0],title:x[1],cat:x[2],emoji:x[3],color:x[4],desc:x[5],time:x[6],modules:x[7],lesson:x[8],question:x[9],answers:x[10],correct:x[11],badge:x[12]}));
+
+let state={nick:"",done:[]},filter="Todos",active=null,passed=false,font=16;
+
+try{
+    let s=JSON.parse(localStorage.getItem("miniAcadDemo")||"null");
+    if(s){
+        state.nick=typeof s.nick==="string"?s.nick.slice(0,20):"";
+        state.done=Array.isArray(s.done)?s.done.filter(id=>data.some(c=>c.id===id)):[];
+    }
+}catch(e){}
+
+function save(){
+    try{localStorage.setItem("miniAcadDemo",JSON.stringify(state))}catch(e){}
+    renderProgress();
+}
+
+function getBestVoice(){
+    if(!("speechSynthesis" in window)) return null;
+    let voices = speechSynthesis.getVoices();
+    let preferred = voices.find(v => v.lang.toLowerCase().startsWith("es") && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Microsoft") || v.name.includes("Sabina") || v.name.includes("Helena") || v.name.includes("Pablo")));
+    if(preferred) return preferred;
+    return voices.find(v => v.lang.toLowerCase().startsWith("es")) || null;
+}
+
+function speak(t){
+    if(!("speechSynthesis" in window)){
+        alert("Tu navegador no soporta lectura por voz.");
+        return;
+    }
+    speechSynthesis.cancel();
+    let u=new SpeechSynthesisUtterance(t);
+    u.lang="es-ES";
+    u.rate=.92;
+    u.pitch=1.05;
+    
+    let best = getBestVoice();
+    if(best) u.voice = best;
+    
+    speechSynthesis.speak(u);
+}
+
+if("speechSynthesis" in window){
+    speechSynthesis.onvoiceschanged = () => { getBestVoice(); };
+}
+
+function renderCourses(){
+    let term=$("#search").value.toLowerCase().trim(),
+        arr=data.filter(c=>(filter==="Todos"||c.cat===filter)&&(c.title+" "+c.desc+" "+c.cat).toLowerCase().includes(term));
+    $("#courseCount").textContent=arr.length+" cursos visibles · 15 en total";
+    let grid=$("#courses");
+    grid.replaceChildren();
+    if(!arr.length){
+        grid.textContent="No hay cursos que coincidan. Prueba otra búsqueda.";
+        return;
+    }
+    arr.forEach(c=>{
+        let card=document.createElement("article");
+        card.className="card";
+        let banner=document.createElement("div");
+        banner.className="banner";
+        banner.style.background=c.color;
+        let em=document.createElement("span");
+        em.className="emoji";
+        em.textContent=c.emoji;
+        em.setAttribute("aria-hidden","true");
+        let tag=document.createElement("span");
+        tag.className="tag";
+        tag.textContent=c.cat.toUpperCase();
+        banner.append(em,tag);
+        let body=document.createElement("div");
+        body.className="cardbody";
+        let h=document.createElement("h3");
+        h.textContent=c.title;
+        let p=document.createElement("p");
+        p.textContent=c.desc;
+        let meta=document.createElement("div");
+        meta.className="meta";
+        meta.textContent=`📚 ${c.modules.length} módulos · ⏱️ ${c.time}`;
+        let track=document.createElement("div");
+        track.className="track";
+        let fill=document.createElement("span");
+        fill.style.width=state.done.includes(c.id)?"100%":"0%";
+        track.append(fill);
+        let buttons=document.createElement("div");
+        buttons.className="cardbuttons";
+        let open=document.createElement("button");
+        open.className="btn primary";
+        open.textContent=state.done.includes(c.id)?"Repasar curso":"Acceder";
+        open.addEventListener("click",()=>openCourse(c.id));
+        let listen=document.createElement("button");
+        listen.className="btn secondary";
+        listen.textContent="🔊 Escuchar";
+        listen.setAttribute("aria-label","Escuchar curso "+c.title);
+        listen.addEventListener("click",()=>speak(c.title+". "+c.desc));
+        buttons.append(open,listen);
+        body.append(h,p,meta,track,buttons);
+        card.append(banner,body);
+        grid.append(card);
+    });
+}
+
+function renderProgress(){
+    $("#nick").textContent=state.nick||"Explorador/a";
+    $("#hint").textContent=state.nick?"¡Sigue aprendiendo a tu ritmo!":"Elige un apodo con ayuda de un adulto.";
+    $("#progressText").textContent=state.done.length+" de 15 cursos completados";
+    $("#progressBar").style.width=(state.done.length/15*100)+"%";
+    $("#progressMessage").textContent=state.done.length===15?"¡Completaste todos los cursos!":state.done.length?"¡Muy bien! Ya tienes "+state.done.length+" insignia(s).":"Cada reto es un paso de tu aventura.";
+    let box=$("#badges");
+    box.replaceChildren();
+    data.forEach(c=>{
+        let won=state.done.includes(c.id),
+            b=document.createElement("div");
+        b.className="badge"+(won?"":" locked");
+        let em=document.createElement("span");
+        em.textContent=won?c.emoji:"🔒";
+        let name=document.createElement("span");
+        name.textContent=won?c.badge:"Insignia pendiente";
+        b.append(em,name);
+        box.append(b);
+    });
+    renderCourses();
+}
+
+function openCourse(id){
+    active=data.find(c=>c.id===id);
+    passed=false;
+    $("#courseCat").textContent=active.cat;
+    $("#courseTitle").textContent=active.emoji+" "+active.title;
+    $("#courseDesc").textContent=active.desc;
+    $("#lessonText").textContent=active.lesson;
+    
+    let modulesList=$("#modules");
+    modulesList.replaceChildren();
+    
+    let fullTextToSpeak = active.title + ". " + active.desc + ". ";
+
+    active.modules.forEach(m=>{
+        let li=document.createElement("li");
+        
+        let titleDiv=document.createElement("div");
+        titleDiv.className="step-header";
+        
+        let titleText = document.createElement("span");
+        titleText.textContent = m.title;
+        
+        let stepVoiceBtn = document.createElement("button");
+        stepVoiceBtn.className = "btn secondary";
+        stepVoiceBtn.style.padding = "4px 8px";
+        stepVoiceBtn.style.fontSize = ".78rem";
+        stepVoiceBtn.textContent = "🔊 Escuchar paso";
+        stepVoiceBtn.onclick = (e) => {
+            e.stopPropagation();
+            speak(m.title + ". " + m.desc);
+        };
+
+        titleDiv.append(titleText, stepVoiceBtn);
+        
+        let gfxDiv=document.createElement("div");
+        gfxDiv.className="step-gfx";
+        gfxDiv.textContent=m.gfx;
+        
+        let descDiv=document.createElement("div");
+        descDiv.className="step-desc";
+        descDiv.textContent=m.desc;
+        
+        li.append(titleDiv, gfxDiv, descDiv);
+        modulesList.append(li);
+        
+        fullTextToSpeak += m.title + ". " + m.desc + ". ";
+    });
+    
+    $("#question").textContent=active.question;
+    $("#courseAnswers").replaceChildren();
+    active.answers.forEach((a,i)=>{
+        let b=document.createElement("button");
+        b.className="answer";
+        b.textContent=a;
+        b.addEventListener("click",()=>{
+            passed=i===active.correct;
+            $("#activityFeedback").textContent=passed?"¡Correcto! Ya puedes completar el curso. 🎉":"Inténtalo otra vez. ¡Tú puedes!";
+            $("#activityFeedback").style.color=passed?"var(--green)":"var(--pink)";
+            if(passed) speak("¡Muy bien! Respuesta correcta.");
+            else speak("Inténtalo otra vez. ¡Tú puedes!");
+        });
+        $("#courseAnswers").append(b);
+    });
+    
+    $("#activityFeedback").textContent="Elige una respuesta.";
+    $("#courseStatus").textContent="";
+    $("#complete").disabled=state.done.includes(id);
+    $("#complete").textContent=state.done.includes(id)?"¡Insignia obtenida! ✓":"Completar y ganar insignia 🏆";
+    
+    $("#speakLesson").onclick = () => speak(fullTextToSpeak + "Reto: " + active.question);
+    
+    $("#courseDialog").showModal();
+    speak("Bienvenido a " + active.title + ". " + active.desc);
+}
+
+function closeDialog(id){
+    if($(id).open)$(id).close();
+}
+
+$$(".filter").forEach(b=>b.addEventListener("click",()=>{     filter=b.dataset.filter;     $$
+(".filter").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    renderCourses();
+    speak("Mostrando cursos de " + filter);
+}));
+
+$("#search").addEventListener("input",renderCourses);
+$("#profileBtn").addEventListener("click",()=>$("#profileDialog").showModal());
+$("#registerBtn").addEventListener("click",()=>$("#profileDialog").showModal());
+
+$("#profileForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    if(!$("#adult").checked) return;
+    state.nick=$("#nickname").value.trim().slice(0,20);
+    save();
+    $("#profileStatus").textContent="Apodo guardado en este navegador.";
+    speak("Apodo guardado correctamente.");
+    closeDialog("#profileDialog");
+});
+
+$("#closeProfile").addEventListener("click",()=>closeDialog("#profileDialog"));
+$("#closeProfileX").addEventListener("click",()=>closeDialog("#profileDialog"));
+$("#closeCourse").addEventListener("click",()=>closeDialog("#courseDialog"));
+$("#closeCourseX").addEventListener("click",()=>closeDialog("#courseDialog"));
+
+$("#complete").addEventListener("click",()=>{
+    if(!active) return;
+    if(state.done.includes(active.id)) return;
+    if(!passed){
+        $("#courseStatus").textContent="Responde correctamente el reto antes de completar el curso.";
+        speak("Responde correctamente el reto antes de completar el curso.");
+        return;
+    }
+    state.done.push(active.id);
+    save();
+    $("#complete").disabled=true;
+    $("#complete").textContent="¡Insignia obtenida! ✓";
+    $("#courseStatus").textContent="¡Felicidades! Ganaste: "+active.badge+" "+active.emoji;     speak("¡Excelente trabajo! Ganaste la insignia " + active.badge); });  $$("[data-quick]").forEach(b=>b.addEventListener("click",()=>{
+    let ok=b.dataset.quick==="verde";
+    $("#quickFeedback").textContent=ok?"¡Correcto! Azul + amarillo puede formar verde. 🌿":"¡Prueba otra vez! Piensa en el color de las hojas.";
+    $("#quickFeedback").style.color=ok?"var(--green)":"var(--pink)";
+    speak(ok?"¡Excelente! Mezclar azul y amarillo forma el color verde.":"¡Casi lo logras! Piensa en el color de las plantas e inténtalo de nuevo.");
+}));
+
+$("#speakQuiz").addEventListener("click",()=>speak("Reto rápido: ¿Qué color aparece al mezclar azul y amarillo? Las opciones son verde, morado o naranja."));
+$("#speakPage").addEventListener("click",()=>speak("Te damos la bienvenida a Pequeños Exploradores de MiniAcad. Explora quince cursos divertidos, practica actividades e intenta conseguir todas las insignias."));
+$("#welcomeVoice").addEventListener("click",()=>speak("Te damos la bienvenida. Explora los cursos sobre ciencia, matemáticas, arte, vida diaria y tecnología. Puedes pulsar los botones de voz para escuchar cada paso."));
+$("#stopVoice").addEventListener("click",()=>{if("speechSynthesis"in window)speechSynthesis.cancel()});
+
+$("#bigger").addEventListener("click",()=>{
+    font=Math.min(24,font+1);
+    document.documentElement.style.setProperty("--font",font+"px");
+    speak("Aumentando tamaño de letra");
+});
+$("#smaller").addEventListener("click",()=>{
+    font=Math.max(14,font-1);
+    document.documentElement.style.setProperty("--font",font+"px");
+    speak("Reduciendo tamaño de letra");
+});
+$("#normal").addEventListener("click",()=>{
+    font=16;
+    document.documentElement.style.setProperty("--font","16px");
+    speak("Restableciendo tamaño de letra normal");
+});
+
+$("#contrast").addEventListener("click",()=>{
+    let on=document.body.classList.toggle("high");
+    $("#contrast").setAttribute("aria-pressed",String(on));
+    $("#contrast").textContent=on?"Desactivar contraste":"Activar contraste";
+    speak(on?"Alto contraste activado":"Alto contraste desactivado");
+});
+$("#soft").addEventListener("click",()=>{
+    let on=document.body.classList.toggle("soft");
+    $("#soft").setAttribute("aria-pressed",String(on));
+    $("#soft").textContent=on?"Desactivar modo suave":"Modo suave";
+    speak(on?"Modo de colores suaves activado":"Modo suave desactivado");
+});
+
+$("#privacyBtn").addEventListener("click",()=>$("#privacyDialog").showModal());
+$("#closePrivacy").addEventListener("click",()=>closeDialog("#privacyDialog"));
+$("#closePrivacyX").addEventListener("click",()=>closeDialog("#privacyDialog"));
+
+[$("#courseDialog"), $("#profileDialog"), $("#privacyDialog")].forEach(d => {
+    d.addEventListener("click", e => {
+        if (e.target === d) d.close();
+    });
+});
+
+renderProgress();
+</script>
+</body>
+</html>
